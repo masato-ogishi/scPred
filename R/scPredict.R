@@ -30,6 +30,7 @@
 scPredict <- function(new,
                       reference, 
                       threshold = 0.55, 
+                      vars.harmony = c("dataset"),
                       max.iter.harmony = 20,
                       recompute_alignment = TRUE,
                       seed = 66){
@@ -52,11 +53,14 @@ scPredict <- function(new,
 
   # Project query data ------------------------------------------------------
 
-  new <- project_query(new, 
-                reference = spmodel, 
-                max.iter.harmony = max.iter.harmony, 
-                recompute_alignment = recompute_alignment,
-                seed = seed)
+  new <- project_query(
+    new, 
+    reference = spmodel, 
+    vars.harmony = vars.harmony,
+    max.iter.harmony = max.iter.harmony, 
+    recompute_alignment = recompute_alignment,
+    seed = seed
+  )
   
   new_embeddings_aligned <- Embeddings(new[["scpred"]])
   colnames(new_embeddings_aligned) <- colnames(spmodel@cell_embeddings)

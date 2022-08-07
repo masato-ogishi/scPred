@@ -2,6 +2,7 @@
 #' @description Projects data from Seurat object onto a pre-computed PCA
 #' @param new A Seurat object containing cells to be projected
 #' @param reference A \code{Seurat} object after running \code{getFeatureSpace()}
+#' @param vars.harmony Variables to integrate via Harmony. The default value is \code{"dataset"}, which indicates whether the cells are derived from the reference or query dataset. Additional variables present in the metadata of the reference and query Seurat object can be added.
 #' @param max.iter.harmony Maximum number of rounds to run Harmony. One round of Harmony involves one clustering and one correction step.
 #' @param recompute_alignment Recompute alignment? Useful if \code{scPredict()} has already been run
 #' @param seed Numeric seed for harmony 
@@ -22,6 +23,7 @@
 
 project_query <- function(new, 
                           reference, 
+                          vars.harmony = c("dataset"),
                           max.iter.harmony = 20,
                           recompute_alignment = TRUE,
                           seed = 66, 
@@ -125,14 +127,29 @@ if(alignment){
   
   
   eigenspace <- as.data.frame(rbind(ref_embeddings, new_embeddings))
-  meta_data <- data.frame(rownames(eigenspace), dataset = dataset)
+  meta_data <- data.frame(
+    rownames(eigenspace), 
+    dataset = dataset
+  )
+  if(is(reference, "Seurat")){
+    meta_data_reference <- reference@meta.data
+  }else{
+    meta_data_reference <- reference@metadata
+  }
+  meta_data <- data.frame(
+    meta_data, 
+    data.table::rbindlist(list(
+      meta_data_reference, 
+      as.data.frame(new@meta.data)
+    ), fill=T)
+  )
   
   cat(crayon::green(cli::symbol$record, " Aligning new data to reference...\n"))
   
   set.seed(seed)
   harmony_embeddings <- HarmonyMatrix(eigenspace, 
                                       meta_data, 
-                                      'dataset', 
+                                      vars_use = vars.harmony, 
                                       do_pca = FALSE, 
                                       reference_values = "reference",
                                       max.iter.harmony = max.iter.harmony, 

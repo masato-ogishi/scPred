@@ -7,6 +7,7 @@
 project_query(
   new,
   reference,
+  vars.harmony = c("dataset"),
   max.iter.harmony = 20,
   recompute_alignment = TRUE,
   seed = 66,
@@ -17,6 +18,8 @@ project_query(
 \item{new}{A Seurat object containing cells to be projected}
 
 \item{reference}{A \code{Seurat} object after running \code{getFeatureSpace()}}
+
+\item{vars.harmony}{Variables to integrate via Harmony. The default value is \code{"dataset"}, which indicates whether the cells are derived from the reference or query dataset. Additional variables present in the metadata of the reference and query Seurat object can be added.}
 
 \item{max.iter.harmony}{Maximum number of rounds to run Harmony. One round of Harmony involves one clustering and one correction step.}
 

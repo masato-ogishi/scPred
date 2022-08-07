@@ -8,6 +8,7 @@ scPredict(
   new,
   reference,
   threshold = 0.55,
+  vars.harmony = c("dataset"),
   max.iter.harmony = 20,
   recompute_alignment = TRUE,
   seed = 66
