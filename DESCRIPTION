@@ -23,7 +23,8 @@ Imports:
     knitr,
     pbapply,
     cli,
-    crayon
+    crayon,
+    dplyr
 Suggests:
     magrittr, mda
 Remotes:

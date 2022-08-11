@@ -134,7 +134,7 @@ if(alignment){
   if(is(reference, "Seurat")){
     meta_data_reference <- reference@meta.data
   }else{
-    meta_data_reference <- reference@metadata
+    meta_data_reference <- reference@misc ## The original metadata needs to be stored in the misc slot.
   }
   meta_data <- data.frame(
     meta_data, 
